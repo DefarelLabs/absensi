@@ -1,0 +1,17 @@
+# Foto hasil absensi (data pengguna, jangan diupload ke repo)
+uploads/*
+uploads-bukti/*
+!uploads/.gitkeep
+!uploads-bukti/.gitkeep
+
+# File konfigurasi sensitif (kalau nanti dipisah dari koneksi.php)
+config/koneksi.local.php
+
+# File OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Log
+*.log
