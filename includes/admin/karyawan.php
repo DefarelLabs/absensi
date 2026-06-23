@@ -11,7 +11,7 @@
         <label class="form-label">Kode ID Card</label>
         <div style="display:flex;align-items:center;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;background:var(--card);" id="kode-wrap">
           <span style="padding:8px 10px;background:var(--bg-admin);color:var(--biru);font-family:'DM Mono',monospace;font-weight:800;font-size:.9rem;border-right:1.5px solid var(--border);flex-shrink:0;">ID</span>
-          <input type="text" id="kode-input-visual" maxlength="6" placeholder="4-6 Digit" autocomplete="off"
+          <input type="text" id="kode-input-visual" maxlength="6" placeholder="4-6 Digit" autocomplete="off" inputmode="numeric"
             style="border:none;outline:none;padding:8px 10px;font-family:'DM Mono',monospace;font-size:.88rem;text-transform:uppercase;width:100%;background:transparent;"
             oninput="syncKodeInput(this)">
         </div>
