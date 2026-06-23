@@ -22,8 +22,8 @@
   <form method="GET" class="filter-bar">
     <input type="hidden" name="menu" value="dashboard">
     <input type="date" name="tgl" value="<?= $tgl_dash ?>" max="<?= date('Y-m-d') ?>"
-      class="form-control" style="max-width:150px;" onchange="this.form.submit()">
-    <select name="filter_status" class="form-select" style="max-width:140px;" onchange="this.form.submit()">
+      class="form-control" style="max-width:190px;" onchange="this.form.submit()">
+    <select name="filter_status" class="form-select" style="min-width:130px;" onchange="this.form.submit()">
       <option value="semua" <?= $fil_stat==='semua'?'selected':'' ?>>Semua Status</option>
       <option value="Hadir" <?= $fil_stat==='Hadir'?'selected':'' ?>>Hadir</option>
       <option value="Izin"  <?= $fil_stat==='Izin'?'selected':'' ?>>Izin</option>
