@@ -4,7 +4,7 @@
   <div class="kartu-judul"><span><i class="bi bi-plus-circle me-1"></i>Tambah Shift</span></div>
   <form method="POST">
     <input type="hidden" name="aksi" value="tambah_shift">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;">
+    <div class="grid-shift-form">
       <div><label class="form-label">Nama Shift *</label><input type="text" name="nama_shift" class="form-control" placeholder="Shift Pagi" required></div>
       <div><label class="form-label">Toleransi (menit)</label><input type="number" name="toleransi" class="form-control" value="15" min="0" max="120"></div>
       <div><label class="form-label">Jam Masuk</label><input type="time" name="jam_masuk" class="form-control" required></div>

@@ -287,6 +287,17 @@ input[type="date"]::-webkit-datetime-edit-day-field {
     -webkit-appearance: auto !important;
     min-height: 44px;
     padding-right: 38px !important;
+    /* Cegah field melebar melebihi kolom grid di iPhone Safari */
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    overflow: hidden;
+  }
+  /* Pastikan teks jam di dalam field tidak melar keluar */
+  input[type="time"]::-webkit-datetime-edit-fields-wrapper,
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+    overflow: hidden !important;
+    max-width: calc(100% - 42px) !important;
   }
 }
 
@@ -599,4 +610,57 @@ input[type="date"]::-webkit-datetime-edit-day-field {
 }
 @media (min-width: 768px) {
   .sb-backdrop { display: none !important; }
+}
+
+/* ===== SAFARI / IPHONE CSS GRID FIX =====
+   Safari punya bug klasik: child elemen grid tidak otomatis punya min-width:0,
+   sehingga input type="time" bisa melar melewati kolom gridnya.
+   Fix global: paksa semua grid-child punya min-width:0 di layar mobile.
+*/
+@media (max-width: 600px) {
+  form div[style*="grid-template-columns"] > div,
+  div[style*="grid-template-columns"] > div {
+    min-width: 0;
+    overflow: hidden;
+  }
+  form div[style*="grid-template-columns"] input[type="time"],
+  form div[style*="grid-template-columns"] input[type="date"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+}
+
+/* ===== GRID FORM SHIFT (jamkerja.php) =====
+   Pakai class eksplisit agar bisa di-override di mobile dengan benar.
+   Di desktop/tablet: 2 kolom. Di iPhone (<480px): 2 kolom tapi dengan
+   min-width:0 eksplisit agar input time tidak overflow.
+*/
+.grid-shift-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 9px;
+}
+
+/* Setiap cell dalam grid WAJIB punya min-width:0 — fix bug Safari/iPhone
+   di mana grid item tidak shrink di bawah content size-nya */
+.grid-shift-form > div {
+  min-width: 0;
+}
+
+/* Input time/date di dalam .grid-shift-form: paksa tidak melewati kolom */
+.grid-shift-form input[type="time"],
+.grid-shift-form input[type="date"] {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Di layar sangat sempit (<360px): stack jadi 1 kolom agar tidak sumpek */
+@media (max-width: 359px) {
+  .grid-shift-form {
+    grid-template-columns: 1fr;
+  }
 }
