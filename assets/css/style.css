@@ -194,15 +194,14 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   cursor: pointer;
 }
 
-/* ===== INPUT TIME & DATE — UNIVERSAL FIX (v3) =====
-   Strategi:
-   1. Hapus ikon bawaan browser (tidak konsisten antar platform)
-   2. Inject ikon jam/kalender via background-image SVG — 100% terlihat di semua browser
-   3. Paksa appearance:auto supaya placeholder "--:--" dan "dd/mm/yyyy" tetap muncul
-   4. Khusus iPhone Safari: gunakan @supports untuk override tambahan
+/* ===== INPUT TIME & DATE — UNIVERSAL FIX (v4) =====
+   Prinsip:
+   - Pertahankan SATU icon saja: icon NATIVE browser (bukan SVG background)
+   - Warnai icon native dengan filter CSS agar biru & konsisten
+   - JANGAN pakai background-image SVG (menyebabkan double icon di Android)
+   - JANGAN pakai overflow:hidden di wrapper (memotong icon di iPhone)
+   - Appearance auto agar placeholder "--:--" tetap muncul
 */
-
-/* BASE — berlaku semua browser */
 input[type="time"],
 input[type="time"].form-control,
 input[type="date"],
@@ -210,61 +209,50 @@ input[type="date"].form-control {
   -webkit-appearance: auto !important;
   -moz-appearance:    auto !important;
   appearance:         auto !important;
-  position: relative;              /* agar ::picker-indicator absolute bekerja */
   background-color: var(--card) !important;
+  background-image: none !important;   /* pastikan TIDAK ada SVG double */
   color: var(--gelap) !important;
   min-height: 42px;
-  padding: 9px 38px 9px 12px !important; /* kanan dikosongkan untuk ikon SVG */
+  padding: 9px 10px 9px 12px !important;
   border: 1.5px solid var(--border) !important;
   border-radius: 8px !important;
   font-family: 'DM Sans', sans-serif;
   font-size: .9rem;
   width: 100%;
+  min-width: 0 !important;
+  max-width: 100% !important;
   box-sizing: border-box;
   cursor: pointer;
 }
 
-/* ICON JAM — SVG jam dinding warna biru (#0052cc), injected sebagai background */
-input[type="time"],
-input[type="time"].form-control {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 16 16'%3E%3Cpath fill='%230052cc' d='M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z'/%3E%3Cpath fill='%230052cc' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 10px center !important;
-  background-size: 17px 17px !important;
-}
-
-/* ICON KALENDER — SVG kalender warna biru (#0052cc), injected sebagai background */
-input[type="date"],
-input[type="date"].form-control {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 16 16'%3E%3Cpath fill='%230052cc' d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 10px center !important;
-  background-size: 17px 17px !important;
-}
-
-/* Sembunyikan ikon bawaan browser — digantikan oleh background SVG di atas */
+/* Warnai icon native browser jadi biru tema — berlaku Chrome Android & Desktop */
 input[type="time"]::-webkit-calendar-picker-indicator,
 input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0 !important;
-  width: 30px !important;
-  height: 100% !important;
-  position: absolute !important;
-  right: 0 !important;
-  top: 0 !important;
+  /* filter ini mengubah icon hitam/abu menjadi biru #0052cc */
+  filter: invert(17%) sepia(96%) saturate(2078%) hue-rotate(213deg) brightness(97%) contrast(101%) !important;
+  opacity: 1 !important;
   cursor: pointer !important;
-  /* tetap clickable walau transparan, supaya picker masih bisa dibuka */
+  flex-shrink: 0;
+  /* Jangan position:absolute — biarkan flow normal supaya tidak keluar kotak */
+  width: 18px !important;
+  height: 18px !important;
+  padding: 2px !important;
+  margin-left: 4px !important;
 }
 
-/* Pastikan teks placeholder tidak ikut transparan */
+/* Teks dalam field tetap terlihat */
 input[type="time"]::-webkit-datetime-edit,
 input[type="date"]::-webkit-datetime-edit {
   color: var(--gelap) !important;
   opacity: 1 !important;
+  min-width: 0 !important;
+  flex: 1;
 }
 input[type="time"]::-webkit-datetime-edit-fields-wrapper,
 input[type="date"]::-webkit-datetime-edit-fields-wrapper {
   color: var(--gelap) !important;
   opacity: 1 !important;
+  min-width: 0 !important;
 }
 input[type="time"]::-webkit-datetime-edit-text,
 input[type="date"]::-webkit-datetime-edit-text { color: var(--abu); padding: 0 1px; }
@@ -278,7 +266,7 @@ input[type="date"]::-webkit-datetime-edit-day-field {
   opacity: 1 !important;
 }
 
-/* iPhone Safari tambahan */
+/* iPhone Safari khusus: min-height lebih besar, tetap tanpa overflow:hidden */
 @supports (-webkit-touch-callout: none) {
   input[type="time"],
   input[type="time"].form-control,
@@ -286,18 +274,6 @@ input[type="date"]::-webkit-datetime-edit-day-field {
   input[type="date"].form-control {
     -webkit-appearance: auto !important;
     min-height: 44px;
-    padding-right: 38px !important;
-    /* Cegah field melebar melebihi kolom grid di iPhone Safari */
-    min-width: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    overflow: hidden;
-  }
-  /* Pastikan teks jam di dalam field tidak melar keluar */
-  input[type="time"]::-webkit-datetime-edit-fields-wrapper,
-  input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-    overflow: hidden !important;
-    max-width: calc(100% - 42px) !important;
   }
 }
 
@@ -615,16 +591,15 @@ input[type="date"]::-webkit-datetime-edit-day-field {
 }
 
 
-/* ===== TIME-INPUT-WRAP: Fix input[type=time] overflow di iPhone Safari =====
-   Safari iPhone punya intrinsic min-width pada input[type=time] yang tidak bisa
-   di-override langsung. Solusi: bungkus input dalam div.time-input-wrap
-   yang overflow:hidden, sehingga Safari tidak bisa melar keluar kolom.
+/* ===== TIME-INPUT-WRAP =====
+   Wrapper tipis — overflow TIDAK hidden agar icon tidak terpotong di iPhone.
+   Tugasnya hanya memastikan input mengisi 100% lebar kolom.
 */
 .time-input-wrap {
   display: block;
   width: 100%;
-  overflow: hidden;   /* kunci: potong konten yang melar */
-  border-radius: 8px; /* ikuti border-radius input di dalamnya */
+  min-width: 0;
+  /* overflow SENGAJA tidak diset — jangan overflow:hidden, icon akan terpotong */
 }
 
 .time-input-wrap .time-input,
@@ -643,8 +618,8 @@ input[type="date"]::-webkit-datetime-edit-day-field {
   gap: 9px;
   margin-bottom: 9px;
 }
-/* min-width:0 wajib di setiap grid-child — fix bug Safari/iPhone */
+/* min-width:0 di grid-child: fix bug Safari — grid item tidak shrink otomatis */
 .grid-shift-form > div {
   min-width: 0;
-  overflow: hidden;
+  /* overflow TIDAK hidden: jangan potong icon picker */
 }
