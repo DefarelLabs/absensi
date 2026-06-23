@@ -20,7 +20,7 @@ Aplikasi absensi karyawan berbasis web untuk digunakan di satu perangkat bersama
 ### Sisi Admin (`admin.php`)
 - **Login terpisah** dengan password
 - **Dashboard** — ringkasan harian (Hadir/Izin/Sakit/Total), filter tanggal & status, lihat foto absen langsung, tombol reset data per baris
-- **Laporan Absen** — filter Hari Ini / 1-3 Minggu / 1 Bulan / tanggal spesifik, export ke CSV
+- **Laporan Absen** — filter Hari Ini / 1-3 Minggu / 1 Bulan / tanggal spesifik, export ke CSV, XLSX, dan PDF
 - **Jam Kerja / Shift** — kelola shift kerja & toleransi keterlambatan
 - **Manajemen Karyawan**:
   - Tambah karyawan dengan ID Card auto-generate atau custom
@@ -93,8 +93,8 @@ absensi/
 
 ### 1. Clone / Download repo
 ```bash
-git clone https://github.com/username/absensi-karyawan.git
-cd absensi-karyawan
+git clone https://github.com/DefarelLabs/absensi.git
+cd absensi
 ```
 
 ### 2. Pindahkan ke folder htdocs XAMPP
