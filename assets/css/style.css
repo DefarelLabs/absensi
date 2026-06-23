@@ -290,7 +290,7 @@ input[type="date"]::-webkit-datetime-edit-day-field {
     /* Cegah field melebar melebihi kolom grid di iPhone Safari */
     min-width: 0 !important;
     max-width: 100% !important;
-    width: 100% !important;
+    width: 45% !important;
     overflow: hidden;
   }
   /* Pastikan teks jam di dalam field tidak melar keluar */
