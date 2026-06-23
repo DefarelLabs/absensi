@@ -5,10 +5,26 @@
   <form method="POST">
     <input type="hidden" name="aksi" value="tambah_shift">
     <div class="grid-shift-form">
-      <div><label class="form-label">Nama Shift *</label><input type="text" name="nama_shift" class="form-control" placeholder="Shift Pagi" required></div>
-      <div><label class="form-label">Toleransi (menit)</label><input type="number" name="toleransi" class="form-control" value="15" min="0" max="120"></div>
-      <div><label class="form-label">Jam Masuk</label><input type="time" name="jam_masuk" class="form-control" required></div>
-      <div><label class="form-label">Jam Pulang</label><input type="time" name="jam_pulang" class="form-control" required></div>
+      <div>
+        <label class="form-label">Nama Shift *</label>
+        <input type="text" name="nama_shift" class="form-control" placeholder="Shift Pagi" required>
+      </div>
+      <div>
+        <label class="form-label">Toleransi (menit)</label>
+        <input type="number" name="toleransi" class="form-control" value="15" min="0" max="120">
+      </div>
+      <div>
+        <label class="form-label">Jam Masuk</label>
+        <div class="time-input-wrap">
+          <input type="time" name="jam_masuk" class="form-control time-input" required>
+        </div>
+      </div>
+      <div>
+        <label class="form-label">Jam Pulang</label>
+        <div class="time-input-wrap">
+          <input type="time" name="jam_pulang" class="form-control time-input" required>
+        </div>
+      </div>
     </div>
     <button type="submit" class="btn btn-primer"><i class="bi bi-plus"></i> Tambah Shift</button>
     <p style="font-size:.7rem;color:var(--abu);margin-top:7px;">

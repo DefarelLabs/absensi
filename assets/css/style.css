@@ -303,7 +303,9 @@ input[type="date"]::-webkit-datetime-edit-day-field {
 
 /* Input tanggal di filter bar Laporan Admin */
 .input-tgl-laporan {
-  min-width: 148px !important;
+  min-width: 0 !important;
+  max-width: 148px !important;
+  width: 148px !important;
   min-height: 42px;
 }
 
@@ -612,55 +614,37 @@ input[type="date"]::-webkit-datetime-edit-day-field {
   .sb-backdrop { display: none !important; }
 }
 
-/* ===== SAFARI / IPHONE CSS GRID FIX =====
-   Safari punya bug klasik: child elemen grid tidak otomatis punya min-width:0,
-   sehingga input type="time" bisa melar melewati kolom gridnya.
-   Fix global: paksa semua grid-child punya min-width:0 di layar mobile.
+
+/* ===== TIME-INPUT-WRAP: Fix input[type=time] overflow di iPhone Safari =====
+   Safari iPhone punya intrinsic min-width pada input[type=time] yang tidak bisa
+   di-override langsung. Solusi: bungkus input dalam div.time-input-wrap
+   yang overflow:hidden, sehingga Safari tidak bisa melar keluar kolom.
 */
-@media (max-width: 600px) {
-  form div[style*="grid-template-columns"] > div,
-  div[style*="grid-template-columns"] > div {
-    min-width: 0;
-    overflow: hidden;
-  }
-  form div[style*="grid-template-columns"] input[type="time"],
-  form div[style*="grid-template-columns"] input[type="date"] {
-    min-width: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
+.time-input-wrap {
+  display: block;
+  width: 100%;
+  overflow: hidden;   /* kunci: potong konten yang melar */
+  border-radius: 8px; /* ikuti border-radius input di dalamnya */
 }
 
-/* ===== GRID FORM SHIFT (jamkerja.php) =====
-   Pakai class eksplisit agar bisa di-override di mobile dengan benar.
-   Di desktop/tablet: 2 kolom. Di iPhone (<480px): 2 kolom tapi dengan
-   min-width:0 eksplisit agar input time tidak overflow.
-*/
+.time-input-wrap .time-input,
+.time-input-wrap input[type="time"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  display: block !important;
+}
+
+/* ===== GRID FORM SHIFT (jamkerja.php) ===== */
 .grid-shift-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 9px;
   margin-bottom: 9px;
 }
-
-/* Setiap cell dalam grid WAJIB punya min-width:0 — fix bug Safari/iPhone
-   di mana grid item tidak shrink di bawah content size-nya */
+/* min-width:0 wajib di setiap grid-child — fix bug Safari/iPhone */
 .grid-shift-form > div {
   min-width: 0;
-}
-
-/* Input time/date di dalam .grid-shift-form: paksa tidak melewati kolom */
-.grid-shift-form input[type="time"],
-.grid-shift-form input[type="date"] {
-  min-width: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* Di layar sangat sempit (<360px): stack jadi 1 kolom agar tidak sumpek */
-@media (max-width: 359px) {
-  .grid-shift-form {
-    grid-template-columns: 1fr;
-  }
+  overflow: hidden;
 }
