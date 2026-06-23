@@ -625,6 +625,8 @@ input[type="date"]::-webkit-datetime-edit-day-field {
   width: 100%;
   overflow: hidden;   /* kunci: potong konten yang melar */
   border-radius: 8px; /* ikuti border-radius input di dalamnya */
+  box-sizing: border-box;
+  padding-right: 17px; /* pastikan padding kanan tidak menambah lebar */
 }
 
 .time-input-wrap .time-input,
