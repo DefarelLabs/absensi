@@ -194,57 +194,72 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   cursor: pointer;
 }
 
-/* ===== INPUT TIME & DATE — UNIVERSAL FIX =====
-   Aturan: JANGAN pakai appearance:none pada time/date.
-   Beberapa browser (Android Chrome, Safari iOS) akan menyembunyikan
-   placeholder "--:-- --" / "dd/mm/yyyy" dan ikon jam/kalender jika
-   appearance:none diterapkan.
+/* ===== INPUT TIME & DATE — UNIVERSAL FIX (v3) =====
+   Strategi:
+   1. Hapus ikon bawaan browser (tidak konsisten antar platform)
+   2. Inject ikon jam/kalender via background-image SVG — 100% terlihat di semua browser
+   3. Paksa appearance:auto supaya placeholder "--:--" dan "dd/mm/yyyy" tetap muncul
+   4. Khusus iPhone Safari: gunakan @supports untuk override tambahan
 */
-input[type="time"].form-control,
-input[type="date"].form-control,
+
+/* BASE — berlaku semua browser */
 input[type="time"],
-input[type="date"] {
-  /* Pertahankan appearance native supaya placeholder & ikon muncul di semua browser */
+input[type="time"].form-control,
+input[type="date"],
+input[type="date"].form-control {
   -webkit-appearance: auto !important;
   -moz-appearance:    auto !important;
   appearance:         auto !important;
-
-  background: var(--card) !important;
+  position: relative;              /* agar ::picker-indicator absolute bekerja */
+  background-color: var(--card) !important;
   color: var(--gelap) !important;
   min-height: 42px;
-  padding: 9px 8px 9px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
+  padding: 9px 38px 9px 12px !important; /* kanan dikosongkan untuk ikon SVG */
+  border: 1.5px solid var(--border) !important;
+  border-radius: 8px !important;
   font-family: 'DM Sans', sans-serif;
   font-size: .9rem;
   width: 100%;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
-/* Ikon jam/kalender — terlihat jelas di semua platform */
+/* ICON JAM — SVG jam dinding warna biru (#0052cc), injected sebagai background */
+input[type="time"],
+input[type="time"].form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 16 16'%3E%3Cpath fill='%230052cc' d='M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z'/%3E%3Cpath fill='%230052cc' d='M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 17px 17px !important;
+}
+
+/* ICON KALENDER — SVG kalender warna biru (#0052cc), injected sebagai background */
+input[type="date"],
+input[type="date"].form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 16 16'%3E%3Cpath fill='%230052cc' d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 17px 17px !important;
+}
+
+/* Sembunyikan ikon bawaan browser — digantikan oleh background SVG di atas */
 input[type="time"]::-webkit-calendar-picker-indicator,
 input[type="date"]::-webkit-calendar-picker-indicator {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  /* Warna abu-biru senada tema, terbaca di background putih maupun gelap */
-  filter: invert(35%) sepia(12%) saturate(600%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
-  cursor: pointer;
-  padding: 3px;
-  margin-left: 2px;
-  background: transparent;
-  /* Ukuran ikon sedikit lebih besar agar mudah diklik di layar sentuh */
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
+  opacity: 0 !important;
+  width: 30px !important;
+  height: 100% !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 0 !important;
+  cursor: pointer !important;
+  /* tetap clickable walau transparan, supaya picker masih bisa dibuka */
 }
 
-/* Teks nilai / placeholder dalam field — tidak boleh transparan */
+/* Pastikan teks placeholder tidak ikut transparan */
 input[type="time"]::-webkit-datetime-edit,
 input[type="date"]::-webkit-datetime-edit {
   color: var(--gelap) !important;
   opacity: 1 !important;
-  padding: 0;
 }
 input[type="time"]::-webkit-datetime-edit-fields-wrapper,
 input[type="date"]::-webkit-datetime-edit-fields-wrapper {
@@ -252,10 +267,7 @@ input[type="date"]::-webkit-datetime-edit-fields-wrapper {
   opacity: 1 !important;
 }
 input[type="time"]::-webkit-datetime-edit-text,
-input[type="date"]::-webkit-datetime-edit-text {
-  color: var(--abu);
-  padding: 0 1px;
-}
+input[type="date"]::-webkit-datetime-edit-text { color: var(--abu); padding: 0 1px; }
 input[type="time"]::-webkit-datetime-edit-hour-field,
 input[type="time"]::-webkit-datetime-edit-minute-field,
 input[type="time"]::-webkit-datetime-edit-ampm-field,
@@ -266,18 +278,15 @@ input[type="date"]::-webkit-datetime-edit-day-field {
   opacity: 1 !important;
 }
 
-/* iPhone Safari: pastikan field time tidak menjadi kotak kosong */
+/* iPhone Safari tambahan */
 @supports (-webkit-touch-callout: none) {
   input[type="time"],
-  input[type="time"].form-control {
-    -webkit-appearance: auto !important;
-    min-height: 44px;          /* lebih tinggi agar tombol native muat */
-    padding-right: 6px;
-  }
+  input[type="time"].form-control,
   input[type="date"],
   input[type="date"].form-control {
     -webkit-appearance: auto !important;
     min-height: 44px;
+    padding-right: 38px !important;
   }
 }
 
