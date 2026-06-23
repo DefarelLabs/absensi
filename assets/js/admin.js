@@ -145,6 +145,84 @@ function exportCSV() {
 }
 
 /* ============================================================
+   EXPORT XLSX (via SheetJS)
+   ============================================================ */
+function exportXLSX() {
+  const tbl = document.getElementById('tbl-laporan');
+  if (!tbl) return;
+  if (typeof XLSX === 'undefined') { alert('Library SheetJS belum siap, coba muat ulang halaman.'); return; }
+
+  // Ambil semua baris ke array 2D
+  const rows = [];
+  tbl.querySelectorAll('tr').forEach(tr => {
+    rows.push([...tr.querySelectorAll('th,td')].map(c => c.textContent.trim()));
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+
+  // Styling lebar kolom otomatis
+  const colWidths = rows[0].map((_, ci) =>
+    ({ wch: Math.max(...rows.map(r => (r[ci] || '').length), 10) + 2 })
+  );
+  ws['!cols'] = colWidths;
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Laporan Absensi');
+  XLSX.writeFile(wb, 'laporan-absensi-' + new Date().toISOString().slice(0, 10) + '.xlsx');
+}
+
+/* ============================================================
+   EXPORT PDF (via jsPDF + autoTable)
+   ============================================================ */
+function exportPDF() {
+  const tbl = document.getElementById('tbl-laporan');
+  if (!tbl) return;
+  if (typeof window.jspdf === 'undefined' && typeof jsPDF === 'undefined') {
+    alert('Library jsPDF belum siap, coba muat ulang halaman.'); return;
+  }
+
+  const { jsPDF } = window.jspdf || window;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+
+  // Judul
+  const tglStr = new Date().toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.text('Laporan Absensi Karyawan', 40, 36);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(120);
+  doc.text('Dicetak: ' + tglStr, 40, 50);
+  doc.setTextColor(0);
+
+  // Ambil header & body
+  const headers = [...tbl.querySelectorAll('thead th')].map(th => th.textContent.trim());
+  const body    = [...tbl.querySelectorAll('tbody tr')].map(tr =>
+    [...tr.querySelectorAll('td')].map(td => td.textContent.trim())
+  );
+
+  doc.autoTable({
+    head: [headers],
+    body: body,
+    startY: 60,
+    styles: { font: 'helvetica', fontSize: 8, cellPadding: 4, overflow: 'linebreak' },
+    headStyles: { fillColor: [0, 82, 204], textColor: 255, fontStyle: 'bold', fontSize: 8 },
+    alternateRowStyles: { fillColor: [245, 247, 255] },
+    columnStyles: { 0: { cellWidth: 90 } },
+    margin: { left: 30, right: 30 },
+    didDrawPage: (data) => {
+      // Nomor halaman
+      doc.setFontSize(8);
+      doc.setTextColor(150);
+      doc.text('Halaman ' + doc.internal.getCurrentPageInfo().pageNumber,
+        data.settings.margin.left, doc.internal.pageSize.height - 15);
+    }
+  });
+
+  doc.save('laporan-absensi-' + new Date().toISOString().slice(0, 10) + '.pdf');
+}
+
+/* ============================================================
    LIGHTBOX FOTO
    ============================================================ */
 function bukaFoto(src, info) {

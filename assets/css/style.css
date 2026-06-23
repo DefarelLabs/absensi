@@ -194,52 +194,97 @@ textarea.form-control { resize: vertical; min-height: 80px; }
   cursor: pointer;
 }
 
-/* Input time & date - JANGAN pakai appearance:none di sini.
-   appearance:none di Android Chrome justru MENYEMBUNYIKAN placeholder
-   "mm/dd/yyyy" dan "--:-- --" bawaan beserta ikon kalender/jamnya. */
+/* ===== INPUT TIME & DATE — UNIVERSAL FIX =====
+   Aturan: JANGAN pakai appearance:none pada time/date.
+   Beberapa browser (Android Chrome, Safari iOS) akan menyembunyikan
+   placeholder "--:-- --" / "dd/mm/yyyy" dan ikon jam/kalender jika
+   appearance:none diterapkan.
+*/
 input[type="time"].form-control,
 input[type="date"].form-control,
 input[type="time"],
 input[type="date"] {
+  /* Pertahankan appearance native supaya placeholder & ikon muncul di semua browser */
+  -webkit-appearance: auto !important;
+  -moz-appearance:    auto !important;
+  appearance:         auto !important;
+
   background: var(--card) !important;
-  color: var(--gelap);
-  min-height: 40px;
-  padding: 9px 12px;
+  color: var(--gelap) !important;
+  min-height: 42px;
+  padding: 9px 8px 9px 12px;
   border: 1.5px solid var(--border);
   border-radius: 8px;
   font-family: 'DM Sans', sans-serif;
   font-size: .9rem;
   width: 100%;
   box-sizing: border-box;
-  /* appearance default (auto) dipertahankan supaya placeholder & ikon native muncul */
 }
 
-/* Ikon kalender/jam bawaan Chrome/Safari - tetap terlihat & diberi warna senada tema */
+/* Ikon jam/kalender — terlihat jelas di semua platform */
 input[type="time"]::-webkit-calendar-picker-indicator,
 input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 1;
-  filter: invert(46%) sepia(8%) saturate(818%) hue-rotate(176deg) brightness(91%) contrast(86%);
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  /* Warna abu-biru senada tema, terbaca di background putih maupun gelap */
+  filter: invert(35%) sepia(12%) saturate(600%) hue-rotate(180deg) brightness(95%) contrast(90%) !important;
   cursor: pointer;
-  padding: 2px;
+  padding: 3px;
+  margin-left: 2px;
   background: transparent;
+  /* Ukuran ikon sedikit lebih besar agar mudah diklik di layar sentuh */
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
-/* Pastikan field placeholder/value tidak transparan (beberapa Android WebView) */
+/* Teks nilai / placeholder dalam field — tidak boleh transparan */
 input[type="time"]::-webkit-datetime-edit,
 input[type="date"]::-webkit-datetime-edit {
-  color: var(--gelap);
-  opacity: 1;
+  color: var(--gelap) !important;
+  opacity: 1 !important;
+  padding: 0;
 }
 input[type="time"]::-webkit-datetime-edit-fields-wrapper,
 input[type="date"]::-webkit-datetime-edit-fields-wrapper {
-  color: var(--gelap);
-  opacity: 1;
+  color: var(--gelap) !important;
+  opacity: 1 !important;
+}
+input[type="time"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-text {
+  color: var(--abu);
+  padding: 0 1px;
+}
+input[type="time"]::-webkit-datetime-edit-hour-field,
+input[type="time"]::-webkit-datetime-edit-minute-field,
+input[type="time"]::-webkit-datetime-edit-ampm-field,
+input[type="date"]::-webkit-datetime-edit-year-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field {
+  color: var(--gelap) !important;
+  opacity: 1 !important;
 }
 
-/* Input tanggal di Laporan Admin - fix khusus mobile supaya tidak terlihat kotak kosong */
+/* iPhone Safari: pastikan field time tidak menjadi kotak kosong */
+@supports (-webkit-touch-callout: none) {
+  input[type="time"],
+  input[type="time"].form-control {
+    -webkit-appearance: auto !important;
+    min-height: 44px;          /* lebih tinggi agar tombol native muat */
+    padding-right: 6px;
+  }
+  input[type="date"],
+  input[type="date"].form-control {
+    -webkit-appearance: auto !important;
+    min-height: 44px;
+  }
+}
+
+/* Input tanggal di filter bar Laporan Admin */
 .input-tgl-laporan {
-  min-width: 140px !important;
-  min-height: 40px;
+  min-width: 148px !important;
+  min-height: 42px;
 }
 
 /* ===== STATUS RADIO ===== */

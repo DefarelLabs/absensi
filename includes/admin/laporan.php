@@ -2,7 +2,17 @@
 <div class="kartu">
   <div class="kartu-judul">
     <span><i class="bi bi-bar-chart-line me-1"></i>Rekap Absensi</span>
-    <button class="btn btn-export" onclick="exportCSV()"><i class="bi bi-download"></i> Export CSV</button>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+      <button class="btn btn-export" onclick="exportCSV()" title="Export ke CSV">
+        <i class="bi bi-filetype-csv"></i> CSV
+      </button>
+      <button class="btn btn-export" style="background:#1d6f42;" onclick="exportXLSX()" title="Export ke Excel">
+        <i class="bi bi-file-earmark-excel"></i> XLSX
+      </button>
+      <button class="btn btn-export" style="background:#c0392b;" onclick="exportPDF()" title="Export ke PDF">
+        <i class="bi bi-file-earmark-pdf"></i> PDF
+      </button>
+    </div>
   </div>
 
   <!-- Filter rentang + tanggal spesifik -->
