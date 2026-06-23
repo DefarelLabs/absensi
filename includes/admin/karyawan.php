@@ -5,7 +5,7 @@
   <form method="POST">
     <input type="hidden" name="aksi" value="tambah_karyawan">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px;">
-      <div style="grid-column:1/-1;"><label class="form-label">Nama Lengkap *</label><input type="text" name="nama" class="form-control" placeholder="Nama karyawan" required></div>
+      <div style="grid-column:1/-1;"><label class="form-label">Nama Lengkap<span style="color:var(--merah);font-weight:800;">*</span></label><input type="text" name="nama" class="form-control" placeholder="Nama karyawan" required></div>
       <div><label class="form-label">Jabatan</label><input type="text" name="posisi" class="form-control" placeholder="Kasir, Manager..."></div>
       <div>
         <label class="form-label">Kode ID Card</label>

@@ -6,7 +6,7 @@
     <input type="hidden" name="aksi" value="tambah_shift">
     <div class="grid-shift-form">
       <div>
-        <label class="form-label">Nama Shift *</label>
+        <label class="form-label">Nama Shift<span style="color:var(--merah);font-weight:800;">*</span></label>
         <input type="text" name="nama_shift" class="form-control" placeholder="Shift Pagi" required>
       </div>
       <div>

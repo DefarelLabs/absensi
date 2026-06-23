@@ -5,7 +5,7 @@
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px;">
 
     <div style="grid-column:1/-1;">
-      <label class="form-label">Nama Lengkap *</label>
+      <label class="form-label">Nama Lengkap<span style="color:var(--merah);font-weight:800;">*</span></label>
       <input type="text" name="nama" class="form-control" value="<?= htmlspecialchars($edit_data['nama']) ?>" required>
     </div>
 
