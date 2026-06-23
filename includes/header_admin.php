@@ -13,5 +13,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <!-- App CSS -->
 <link rel="stylesheet" href="assets/css/style.css?v=<?= file_exists(__DIR__.'/../assets/css/style.css') ? filemtime(__DIR__.'/../assets/css/style.css') : time() ?>">
+<link rel="icon" type="image/x-icon" href="assets/favicon.webp">
 </head>
 <body>

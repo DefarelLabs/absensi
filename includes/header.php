@@ -12,5 +12,7 @@
 <!-- App CSS -->
 <link rel="stylesheet" href="assets/css/style.css?v=<?= file_exists(__DIR__.'/../assets/css/style.css') ? filemtime(__DIR__.'/../assets/css/style.css') : time() ?>">
 <?php if (!empty($extra_css)) foreach ($extra_css as $css) echo "<link rel=\"stylesheet\" href=\"{$css}\">\n"; ?>
+<!-- Logo Web -->
+<link rel="icon" type="image/x-icon" href="assets/favicon.webp">
 </head>
 <body>
